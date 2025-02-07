@@ -9,12 +9,16 @@ fp.prec = 30 # Número de bits significativos em ponto flutuante
 # Definindo a precisão decimal
 mp.dps = 30  # Número de dígitos decimais
 
+points = 100
+
+Qs = np.arange(-28, 29)
+
 lamb = (514)*10**(-9)
 k = (2 * np.pi)/lamb
-L = 0.35
-Q = 0.999965*k
-qs = np.arange(-23, 24)    
-spot = 0.0000235133  
+L = 0.5
+Q = 0.99997*k
+qs = np.arange(-28, 29)    
+spot = 0.0000235133
 
 M = (1.57 - 0.038j)
 M1 = (1.57 - 0.38j)

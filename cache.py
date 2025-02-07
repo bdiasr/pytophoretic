@@ -20,7 +20,9 @@ from frozenWave import *
 from asymetryVector import *
 
 import os.path
+
 path = r'D:/Documentos/USP/pytophoretic/cache/'
+path_1 = r'C:Users/Administrador/Documents/USP/pytophoretic/cache/artigo/'
 
 def cache_FW6_Psi():
 
@@ -202,33 +204,147 @@ def cache_FW_Jz_x():
         
         cnt = cnt + 1
 
-def cache_FW1_Jz():
+def cache_FW6_Jz():
 
     eps = epsilonR2(M1_lentes, 1)
-    zval = np.linspace(0, 400*10**(-6), 70)
+    zval = np.linspace(0.10,0.15 , 20)
+    zval2 = np.linspace(0.20,0.25 , 20)
     cnt = 0
 
-    jz1_FW1_01 = {"jz1_FW1_01":[]}
+    jz1_FW6_01 = {"jz1_FW6_01":[]}
+    jz1_FW6_05 = {"jz1_FW6_05":[]}
+    jz1_FW6_1 = {"jz1_FW6_1":[]}
 
-    '''
-    with open(os.path.abspath(path + 'jz1_FW1_01.json'), 'r') as jz_FW:
-        jz_FW = json.load(jz_FW)
-    '''
+    print(L)
+    print(" Iz para x = 0.1 , 0.5 e 1 , configuracao on axis, para o primeiro pico")
 
-    #adicionar verificação se o arquivo ja existe 
-    #parou no 85
-    #print(zval[41:])
-    
     for zi in zval:
         print("i:", cnt)
 
-        jz1_FW1_01['jz1_FW1_01'].append({
+        jz1_FW6_01['jz1_FW6_01'].append({
             "jz": np.float64(I_z(M1_lentes, 0.1, eps, 0, 0, 0, zi)),
             "z": zi
         })
-        json.dump(jz1_FW1_01, open(os.path.abspath(path + 'jz1_FW1_01.json'), 'w'))
+        json.dump(jz1_FW6_01, open(os.path.abspath(path + 'jz1_FW6_01_pt2.json'), 'w'))
+
+        jz1_FW6_05['jz1_FW6_05'].append({
+            "jz": np.float64(I_z(M1_lentes, 0.5, eps, 0, 0, 0, zi)),
+            "z": zi
+        })
+        json.dump(jz1_FW6_05, open(os.path.abspath(path + 'jz1_FW6_05_pt2.json'), 'w'))
+
+        jz1_FW6_1['jz1_FW6_1'].append({
+            "jz": np.float64(I_z(M1_lentes, 1, eps, 0, 0, 0, zi)),
+            "z": zi
+        })
+        json.dump(jz1_FW6_1, open(os.path.abspath(path + 'jz1_FW6_1_pt2.json'), 'w'))
 
         cnt = cnt + 1
+    
+    print(" Iz para x = 0.1 , 0.5 e 1 , configuracao on axis, para o segundo pico")
+
+    for zi in zval2:
+        print("i:", cnt)
+
+        jz1_FW6_01['jz1_FW6_01'].append({
+            "jz": np.float64(I_z(M1_lentes, 0.1, eps, 0, 0, 0, zi)),
+            "z": zi
+        })
+        json.dump(jz1_FW6_01, open(os.path.abspath(path + 'jz1_FW6_01_pt3.json'), 'w'))
+
+        jz1_FW6_05['jz1_FW6_05'].append({
+            "jz": np.float64(I_z(M1_lentes, 0.5, eps, 0, 0, 0, zi)),
+            "z": zi
+        })
+        json.dump(jz1_FW6_05, open(os.path.abspath(path + 'jz1_FW6_05_pt3.json'), 'w'))
+
+        jz1_FW6_1['jz1_FW6_1'].append({
+            "jz": np.float64(I_z(M1_lentes, 1, eps, 0, 0, 0, zi)),
+            "z": zi
+        })
+        json.dump(jz1_FW6_1, open(os.path.abspath(path + 'jz1_FW6_1_pt3.json'), 'w'))
+
+        cnt = cnt + 1
+
+def cache_FW6_Jx_2():
+
+    cnt = 0
+    eps = epsilonR2(M1_lentes, 1)
+    rho = np.linspace(-3*spot, 3*spot, 80)
+
+    jx_FW6_01_L3 = {"jx_FW6_01_L3":[]}
+    jx_FW6_05_L3 = {"jx_FW6_05_L3":[]}
+    jx_FW6_1_L3 = {"jx_FW6_1_L3":[]}
+
+    jx_FW6_01_L2 = {"jx_FW6_01_L2":[]}
+    jx_FW6_05_L2 = {"jx_FW6_05_L2":[]}
+    jx_FW6_1_L2 = {"jx_FW6_1_L2":[]}
+
+    jx_FW6_01_L5 = {"jx_FW6_01_L5":[]}
+    jx_FW6_05_L5 = {"jx_FW6_05_L5":[]}
+    jx_FW6_1_L5 = {"jx_FW6_1_L5":[]}
+    
+    print(L)
+    for rhoi in rho:
+        print("i:", cnt)
+        '''
+        #primeiro pico 1
+        jx_FW6_01_L3['jx_FW6_01_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L3, open(os.path.abspath(path + 'jx_FW6_01_L3_2.json'), 'w'))
+
+        jx_FW6_05_L3['jx_FW6_05_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L3, open(os.path.abspath(path + 'jx_FW6_05_L3_2.json'), 'w'))
+
+        jx_FW6_1_L3['jx_FW6_1_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_1_L3, open(os.path.abspath(path + 'jx_FW6_1_L3.json'), 'w'))
+
+        #vale 1 
+        jx_FW6_01_L2['jx_FW6_01_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L2, open(os.path.abspath(path + 'jx_FW6_01_L2_2.json'), 'w'))
+        jx_FW6_05_L2['jx_FW6_05_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L2, open(os.path.abspath(path + 'jx_FW6_05_L2_2.json'), 'w'))
+
+        jx_FW6_1_L2['jx_FW6_1_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_1_L2, open(os.path.abspath(path + 'jx_FW6_1_L2.json'), 'w'))
+        '''
+        #segundo pico 0.1 0.5 e 1 
+        jx_FW6_01_L5['jx_FW6_01_L5'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.225)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L5, open(os.path.abspath(path + 'jx_FW6_01_L5.json'), 'w'))
+        jx_FW6_05_L5['jx_FW6_05_L5'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.225)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L5, open(os.path.abspath(path + 'jx_FW6_05_L5.json'), 'w'))
+        jx_FW6_1_L5['jx_FW6_1_L5'].append({
+            "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.225)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_1_L5, open(os.path.abspath(path + 'jx_FW6_1_L5.json'), 'w'))
+        
+
+        cnt = cnt + 1
+
 
 def cache_load_FW6_Psi():
     
@@ -343,97 +459,136 @@ def cache_load_FW1_JZ():
     #plt.savefig(path, dpi=500)
     plt.show()
 
-def cache_FW6_Jx_2():
 
-    cnt = 0
-    eps = epsilonR2(M1_lentes, 1)
-    rho = np.linspace(-2*spot, 2*spot, 70)
-
-    jx_FW6_01_L3 = {"jx_FW6_01_L3":[]}
-    jx_FW6_05_L3 = {"jx_FW6_05_L3":[]}
-    jx_FW6_1_L3 = {"jx_FW6_1_L3":[]}
-
-    jx_FW6_01_L2 = {"jx_FW6_01_L2":[]}
-    jx_FW6_05_L2 = {"jx_FW6_05_L2":[]}
-    jx_FW6_1_L2 = {"jx_FW6_1_L2":[]}
-
-    jx_FW6_01_L5 = {"jx_FW6_01_L5":[]}
-    jx_FW6_05_L5 = {"jx_FW6_05_L5":[]}
-    jx_FW6_1_L5 = {"jx_FW6_1_L5":[]}
+def cache_load_FW6_JZ_L3():
     
-    for rhoi in rho:
-        print(L)
-        print("i:", cnt)
-        
-        
-        #x = 0.1
-        jx_FW6_01_L3['jx_FW6_01_L3'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.125)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_01_L3, open(os.path.abspath(path + 'jx_FW6_01_L3_2.json'), 'w'))
+    with open(os.path.abspath(path + 'jx_FW6_01_L3.json'), 'r') as jx_FW6_01_L3:
+        jx_FW6_01_L3 = json.load(jx_FW6_01_L3)
+    with open(os.path.abspath(path + 'jx_FW6_05_L3.json'), 'r') as jx_FW6_05_L3:
+        jx_FW6_05_L3 = json.load(jx_FW6_05_L3)
 
-         jx_FW6_01_L5['jx_FW6_01_L5'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.225)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_01_L5, open(os.path.abspath(path + 'jx_FW6_01_L5.json'), 'w'))
-
-        jx_FW6_01_L2['jx_FW6_01_L2'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.175)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_01_L2, open(os.path.abspath(path + 'jx_FW6_01_L2_2.json'), 'w'))
+    jz01 = []
+    jz05 = []
+    #z_axis = np.linspace(0, 400, 100)
+    count = np.linspace(0, 69, 100, dtype=int)
+    x_axis = []
+    #M = 1.57 - 0.038j
+    for i in count:
+        jz01.append((jx_FW6_01_L3['jx_FW6_01_L3'][i]['jx'])*100)
+        jz05.append(jx_FW6_05_L3['jx_FW6_05_L3'][i]['jx'])
+        x_axis.append(jx_FW6_05_L3['jx_FW6_05_L3'][i]['rho'])
 
 
-        '''
-        # x = 0.5
-         jx_FW6_05_L3['jx_FW6_05_L3'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.125)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_05_L3, open(os.path.abspath(path + 'jx_FW6_05_L3_2.json'), 'w'))
-        jx_FW6_05_L5['jx_FW6_05_L5'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.225)),
-            "rho": rhoi
-        })
-        jx_FW6_05_L2['jx_FW6_05_L2'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.175)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_05_L2, open(os.path.abspath(path + 'jx_FW6_05_L2_2.json'), 'w'))
-        '''
-        
-      '''
-        #x = 1 
-        jx_FW6_1_L2['jx_FW6_1_L2'].append({
-            "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.175)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_1_L2, open(os.path.abspath(path + 'jx_FW6_1_L2.json'), 'w'))
-        
+    plt.plot(x_axis, jz01,"b", label=r'$x = 0.1 \times 100$')
+    plt.plot(x_axis, jz05,"r", label=r'$x = 0.5$')
+    plt.legend()
+    plt.title(r'$J_x$')
+    plt.xlabel(r'$x (\mu \text{m})$')
+    plt.ylabel(r'$J_x(z\text{ = }0.125\text{m}) $')
+    plt.grid()
+    plt.show()
 
-        jx_FW6_1_L3['jx_FW6_1_L3'].append({
-            "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.125)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_1_L3, open(os.path.abspath(path + 'jx_FW6_1_L3.json'), 'w'))
-        
-        json.dump(jx_FW6_05_L5, open(os.path.abspath(path + 'jx_FW6_05_L5.json'), 'w'))
-        jx_FW6_1_L5['jx_FW6_1_L5'].append({
-            "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.225)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_1_L5, open(os.path.abspath(path + 'jx_FW6_1_L5.json'), 'w'))
-        
-        '''
-        cnt = cnt + 1
+
+def cache_load_FW6_JZ_L2():
+    
+    with open(os.path.abspath(path + 'jx_FW6_01_L2.json'), 'r') as jx_FW6_01_L2:
+        jx_FW6_01_L2 = json.load(jx_FW6_01_L2)
+    with open(os.path.abspath(path + 'jx_FW6_05_L2.json'), 'r') as jx_FW6_05_L2:
+        jx_FW6_05_L2 = json.load(jx_FW6_05_L2)
+
+    jz01 = []
+    jz05 = []
+
+    count = np.linspace(0, 69, 100, dtype=int)
+    x_axis = []
+    for i in count:
+        jz01.append((jx_FW6_01_L2['jx_FW6_01_L2'][i]['jx'])*100)
+        jz05.append(jx_FW6_05_L2['jx_FW6_05_L2'][i]['jx'])
+        x_axis.append(jx_FW6_05_L2['jx_FW6_05_L2'][i]['rho'])
+
+
+    plt.plot(x_axis, jz01,"b", label=r'$x = 0.1 \times 100$')
+    plt.plot(x_axis, jz05,"r", label=r'$x = 0.5$')
+    plt.legend()
+    plt.title(r'$J_x$')
+    plt.xlabel(r'$x (\mu \text{m})$')
+    plt.ylabel(r'$J_x(z\text{ = }0.175\text{m}) $')
+    plt.grid()
+    plt.show()
+
+
+def cache_load_FW6_JZ():
+
+    with open(os.path.abspath(path + 'jz1_FW6_01.json'), 'r') as jz1_FW6_01:
+        jz1_FW6_01 = json.load(jz1_FW6_01)
+    with open(os.path.abspath(path + 'jz1_FW6_05.json'), 'r') as jz1_FW6_05:
+        jz1_FW6_05 = json.load(jz1_FW6_05)
+    with open(os.path.abspath(path + 'jz1_FW6_1.json'), 'r') as jz1_FW6_1:
+        jz1_FW6_1 = json.load(jz1_FW6_1)
+
+    jz01 = []
+    jz05 = []
+    jz1 = []
+    #z_axis = np.linspace(0, 400, 100)
+    count = np.linspace(0, 69, 100, dtype=int)
+    x_axis = []
+    #M = 1.57 - 0.038j
+    for i in count:
+        jz01.append((jz1_FW6_01['jz1_FW6_01'][i]['jz'])*10000)
+        jz05.append(jz1_FW6_05['jz1_FW6_05'][i]['jz']*10)
+        jz1.append(jz1_FW6_1['jz1_FW6_1'][i]['jz'])
+        x_axis.append(jz1_FW6_1['jz1_FW6_1'][i]['z'])
+
+
+    plt.plot(x_axis, jz01,"b", label=r'$x = 0.1 \times 10000$')
+    plt.plot(x_axis, jz05,"r", label=r'$x = 0.5 \times 10$')
+    plt.plot(x_axis, jz1,"g", label=r'$x = 1$')
+    plt.legend()
+    plt.title(r'$J_x$')
+    plt.xlabel(r'$x (\mu \text{m})$')
+    plt.ylabel(r'$J_x(z\text{ = }0.125\text{m}) $')
+    plt.grid()
+    plt.show()
+
+
+def cache_load_FW6_JZ_2():
+
+    with open(os.path.abspath(path + 'jx_FW6_01_L5.json'), 'r') as jz1_FW6_01:
+        jz1_FW6_01 = json.load(jz1_FW6_01)
+    with open(os.path.abspath(path + 'jx_FW6_05_L5.json'), 'r') as jz1_FW6_05:
+        jz1_FW6_05 = json.load(jz1_FW6_05)
+    with open(os.path.abspath(path + 'jx_FW6_1_L5.json'), 'r') as jz1_FW6_1:
+        jz1_FW6_1 = json.load(jz1_FW6_1)
+
+    jz01 = []
+    jz05 = []
+    jz1 = []
+    #z_axis = np.linspace(0, 400, 100)
+    count = np.linspace(0, 69, 100, dtype=int)
+    x_axis = []
+    #M = 1.57 - 0.038j
+    for i in count:
+        jz01.append((jz1_FW6_01['jx_FW6_01_L5'][i]['jx'])*10000)
+        jz05.append(jz1_FW6_05['jx_FW6_05_L5'][i]['jx']*100)
+        jz1.append(jz1_FW6_1['jx_FW6_1_L5'][i]['jx']*10)
+        x_axis.append(jz1_FW6_1['jx_FW6_1_L5'][i]['rho'])
+
+
+    plt.plot(x_axis, jz01,"b", label=r'$x = 0.1 \times 10000$')
+    plt.plot(x_axis, jz05,"r", label=r'$x = 0.5 \times 10$')
+    plt.plot(x_axis, jz1,"g", label=r'$x = 1$')
+    plt.legend()
+    plt.title(r'$J_x$')
+    plt.xlabel(r'$x (\mu \text{m})$')
+    plt.ylabel(r'$J_x(z\text{ = }0.125\text{m}) $')
+    plt.grid()
+    plt.show()
 
 def cache_FW6_Jx_2_pc2():
 
     cnt = 0
     eps = epsilonR2(M1_lentes, 1)
-    rho = np.linspace(-2*spot, 2*spot, 70)
+    rho = np.linspace(-3*spot, 3*spot, 80)
 
     jx_FW6_01_L3 = {"jx_FW6_01_L3":[]}
     jx_FW6_05_L3 = {"jx_FW6_05_L3":[]}
@@ -449,72 +604,200 @@ def cache_FW6_Jx_2_pc2():
     
     for rhoi in rho:
         print(L)
-        print("i:", cnt)
+        print("i:", cnt)   
         
-        '''
-        #x = 0.1
-        jx_FW6_01_L3['jx_FW6_01_L3'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.125)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_01_L3, open(os.path.abspath(path + 'jx_FW6_01_L3_2.json'), 'w'))
-
-         jx_FW6_01_L5['jx_FW6_01_L5'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.225)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_01_L5, open(os.path.abspath(path + 'jx_FW6_01_L5.json'), 'w'))
-
-        jx_FW6_01_L2['jx_FW6_01_L2'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.175)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_01_L2, open(os.path.abspath(path + 'jx_FW6_01_L2_2.json'), 'w'))
-        '''
-
-        
-        # x = 0.5
-         jx_FW6_05_L3['jx_FW6_05_L3'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.125)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_05_L3, open(os.path.abspath(path + 'jx_FW6_05_L3_2.json'), 'w'))
-        jx_FW6_05_L5['jx_FW6_05_L5'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.225)),
-            "rho": rhoi
-        })
-        jx_FW6_05_L2['jx_FW6_05_L2'].append({
-            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.175)),
-            "rho": rhoi
-        })
-        json.dump(jx_FW6_05_L2, open(os.path.abspath(path + 'jx_FW6_05_L2_2.json'), 'w'))
-        
-        
-      '''
         #x = 1 
         jx_FW6_1_L2['jx_FW6_1_L2'].append({
             "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.175)),
             "rho": rhoi
         })
-        json.dump(jx_FW6_1_L2, open(os.path.abspath(path + 'jx_FW6_1_L2.json'), 'w'))
+        json.dump(jx_FW6_1_L2, open(os.path.abspath(path + 'jx_FW6_1_L2_3.json'), 'w'))
         
 
         jx_FW6_1_L3['jx_FW6_1_L3'].append({
             "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.125)),
             "rho": rhoi
         })
-        json.dump(jx_FW6_1_L3, open(os.path.abspath(path + 'jx_FW6_1_L3.json'), 'w'))
+        json.dump(jx_FW6_1_L3, open(os.path.abspath(path + 'jx_FW6_1_L3_3.json'), 'w'))
         
-        json.dump(jx_FW6_05_L5, open(os.path.abspath(path + 'jx_FW6_05_L5.json'), 'w'))
         jx_FW6_1_L5['jx_FW6_1_L5'].append({
             "jx": np.float64(I_x(M1_lentes, 1, eps, 0, 0, rhoi, 0.225)),
             "rho": rhoi
         })
-        json.dump(jx_FW6_1_L5, open(os.path.abspath(path + 'jx_FW6_1_L5.json'), 'w'))
+        json.dump(jx_FW6_1_L5, open(os.path.abspath(path + 'jx_FW6_1_L5_3.json'), 'w'))
+        
+        
+        cnt = cnt + 1
+
+
+def cache_FW6_Jx_complemento():
+
+    cnt = 0
+    eps = epsilonR2(M1_lentes, 1)
+    rho = np.linspace(-1.5*float(spot), -float(spot), 4)
+    rho2 = np.linspace(float(spot), 1.5*float(spot), 4)
+
+    jx_FW6_01_L3 = {"jx_FW6_01_L3":[]}
+    jx_FW6_05_L3 = {"jx_FW6_05_L3":[]}
+
+    jx_FW6_01_L2 = {"jx_FW6_01_L2":[]}
+    jx_FW6_05_L2 = {"jx_FW6_05_L2":[]}
+
+    
+    for rhoi in rho:
+        print("i:", cnt)
+
+        jx_FW6_01_L3['jx_FW6_01_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L3, open(os.path.abspath(path + 'jx_FW6_01_L3_comp1.json'), 'w'))
+
+        jx_FW6_05_L3['jx_FW6_05_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L3, open(os.path.abspath(path + 'jx_FW6_05_L3_comp1.json'), 'w'))
+
+        jx_FW6_01_L2['jx_FW6_01_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L2, open(os.path.abspath(path + 'jx_FW6_01_L2_comp1.json'), 'w'))
+        jx_FW6_05_L2['jx_FW6_05_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L2, open(os.path.abspath(path + 'jx_FW6_05_L2_comp1.json'), 'w'))
+
+        cnt = cnt + 1
+
+    for rhoi in rho2:
+        print("i:", cnt)
+
+        jx_FW6_01_L3['jx_FW6_01_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L3, open(os.path.abspath(path + 'jx_FW6_01_L3_comp2.json'), 'w'))
+
+        jx_FW6_05_L3['jx_FW6_05_L3'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L3, open(os.path.abspath(path + 'jx_FW6_05_L3_comp2.json'), 'w'))
+
+        jx_FW6_01_L2['jx_FW6_01_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_01_L2, open(os.path.abspath(path + 'jx_FW6_01_L2_comp2.json'), 'w'))
+        jx_FW6_05_L2['jx_FW6_05_L2'].append({
+            "jx": np.float64(I_x(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jx_FW6_05_L2, open(os.path.abspath(path + 'jx_FW6_05_L2_comp2.json'), 'w'))
+
+        cnt = cnt + 1
+
+
+def cache_FW6_Iy_plot():
+    """
+    Plot de Iy para:
+    z = 0.125
+    z = 0.175
+    z = 0.225
+
+    [Rodando] simulacao para z=0.125
+    [OK] simulacao para z=0.175
+    [OK] simulacao para z=0.225
+    """
+
+    cnt = 0
+    eps = epsilonR2(M1_lentes, 1)
+    rho = np.linspace(-3*spot, 3*spot, 80)
+
+    jy_FW6_01_L3 = {"jy_FW6_01_L3":[]}
+    jy_FW6_05_L3 = {"jy_FW6_05_L3":[]}
+    jy_FW6_1_L3 = {"jy_FW6_1_L3":[]}
+
+    jy_FW6_01_L2 = {"jy_FW6_01_L2":[]}
+    jy_FW6_05_L2 = {"jy_FW6_05_L2":[]}
+    jy_FW6_1_L2 = {"jy_FW6_1_L2":[]}
+
+    jy_FW6_01_L5 = {"jy_FW6_01_L5":[]}
+    jy_FW6_05_L5 = {"jy_FW6_05_L5":[]}
+    jy_FW6_1_L5 = {"jy_FW6_1_L5":[]}
+    
+    print(L)
+    print("Iy para x = 0.1 , 0.5 e 1 , configuracao off axis, x-displacement (-3spot a 3 spot), z=0.125")
+    for rhoi in rho:
+        print("i:", cnt)
+        
+        #primeiro pico 1
+        jy_FW6_01_L3['jy_FW6_01_L3'].append({
+            "jy": np.float64(I_y(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_01_L3, open(os.path.abspath(path + 'jy_FW6_01_L3.json'), 'w'))
+
+        jy_FW6_05_L3['jy_FW6_05_L3'].append({
+            "jy": np.float64(I_y(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_05_L3, open(os.path.abspath(path + 'jy_FW6_05_L3.json'), 'w'))
+
+        jy_FW6_1_L3['jy_FW6_1_L3'].append({
+            "jy": np.float64(I_y(M1_lentes, 1, eps, 0, 0, rhoi, 0.125)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_1_L3, open(os.path.abspath(path + 'jy_FW6_1_L3.json'), 'w'))
         
         '''
+        #vale 1 
+        jy_FW6_01_L2['jy_FW6_01_L2'].append({
+            "jy": np.float64(I_y(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_01_L2, open(os.path.abspath(path + 'jy_FW6_01_L2.json'), 'w'))
+
+        jy_FW6_05_L2['jy_FW6_05_L2'].append({
+            "jy": np.float64(I_y(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_05_L2, open(os.path.abspath(path + 'jy_FW6_05_L2.json'), 'w'))
+
+        jy_FW6_1_L2['jy_FW6_1_L2'].append({
+            "jy": np.float64(I_y(M1_lentes, 1, eps, 0, 0, rhoi, 0.175)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_1_L2, open(os.path.abspath(path + 'jy_FW6_1_L2.json'), 'w'))
+        '''
+        '''
+        #segundo pico 0.1 0.5 e 1 
+        jy_FW6_01_L5['jy_FW6_01_L5'].append({
+            "jy": np.float64(I_y(M1_lentes, 0.1, eps, 0, 0, rhoi, 0.225)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_01_L5, open(os.path.abspath(path + 'jy_FW6_01_L5.json'), 'w'))
+
+        jy_FW6_05_L5['jy_FW6_05_L5'].append({
+            "jy": np.float64(I_y(M1_lentes, 0.5, eps, 0, 0, rhoi, 0.225)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_05_L5, open(os.path.abspath(path + 'jy_FW6_05_L5.json'), 'w'))
+
+        jy_FW6_1_L5['jy_FW6_1_L5'].append({
+            "jx": np.float64(I_y(M1_lentes, 1, eps, 0, 0, rhoi, 0.225)),
+            "rho": rhoi
+        })
+        json.dump(jy_FW6_1_L5, open(os.path.abspath(path + 'jy_FW6_1_L5.json'), 'w'))
+        '''
+
         cnt = cnt + 1
-    
+
+
+
 #cache_FW1_Jz() 
 #cache_FW_Jz_x()
 #cache_load_FW1_JZ()
@@ -526,6 +809,19 @@ def cache_FW6_Jx_2_pc2():
 #print(I_x(M1_lentes, 0.1, epsilonR2(M1_lentes, 1), 0, 0, spot/2, 0.23))  #tem que dar alguma coisa 
 
 #cache_FW6_Jx()
-cache_FW6_Jx_2()
-cache_FW6_Jx_2_pc2()
+#cache_load_FW6_JZ_L3()
+#cache_load_FW6_JZ_L2()
 
+#cache_FW6_Jz()
+#cache_load_FW6_JZ()
+
+#cache_FW6_Jx_2()
+#cache_load_FW6_JZ_2()
+
+#cache_FW6_Jx_2_pc2()
+
+#cache_FW6_Iy_plot()
+
+'''
+ARTIGO NOVO TESTE 
+'''

@@ -28,17 +28,6 @@ def Psi(rho, z):
 
     return total
 
-def Aq_val(L):
-    aq = []
-    for q in qs:
-        aq.append(Aq(q, L))
-    
-    return aq, len(aq)
-  
-#aq_vals = Aq_val(L)[0]
-#print(aq_vals, Aq_val(L)[1])
-
-
 
 '''
 # usar como referencia 
@@ -48,5 +37,37 @@ epslon2 = -(M**2).imag
 epslon22 = -(M2**2).imag
 epslon23 = -(M3**2).imag
 '''
+
+def Psi_1(rho, z):
+
+    soma = []
+    total = 0
+    
+    for q in qs:
+
+        a = Aq_1(q, L)
+        j0 = s.jv(0, (h_q(q) * rho))
+        exponencial = np.exp(-1j * beta_q(q) * z)
+        soma = a * j0 * exponencial
+      
+        total += soma
+
+    return total
+
+def Psi_2(rho, z):
+
+    soma = []
+    total = 0
+    
+    for q in qs:
+
+        a = Aq_2(q)
+        j0 = s.jv(0, (h_q(q) * rho))
+        exponencial = np.exp(-1j * beta_q(q) * z)
+        soma = a * j0 * exponencial
+      
+        total += soma
+
+    return total
 
 

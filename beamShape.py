@@ -170,7 +170,7 @@ def g_mnTM(m, n, v, alpha1, lamb, rho_0, phi_0, x_0, y_0, z_0):
     a1 = (1/2) * (1j**(m+1)) * (-1)**((m - abs(m)) * (1/2))
     b = (fac(n - m))/(fac(n + abs(m))) 
     for q in qs:
-        c = (Aq(q, L)*exp(1j*beta_q(q)*z_0))
+        c = (Aq_1(q, L)*exp(1j*beta_q(q)*z_0))
         
         d = (besselj(m - v - 1,   h_q(q)*rho_0))*exp(-1j*(m - v - 1)*phi_0)
         e = (k/beta_q(q))*(tau_mn(m, n, beta_q(q)/k)) + (m*pi_mn(m, n, beta_q(q)/k))
@@ -186,12 +186,11 @@ def g_mnTM(m, n, v, alpha1, lamb, rho_0, phi_0, x_0, y_0, z_0):
 def g_mnTE(m, n, v, alpha1, lamb, rho_0, phi_0, x_0, y_0, z_0):
     soma = []
     total = 0
-
     a1 = 1j*(-1/2) * (1j**(m + 1 )) * (-1)**((m - abs(m))/2)  
     b = fac(n - m)/(fac(n + abs(m)))
     for q in qs:
 
-        c = (Aq(q, L)*exp(1j*beta_q(q)*z_0))
+        c = (Aq_1(q, L)*exp(1j*beta_q(q)*z_0))
         d = s.jv(m - v - 1, h_q(q)*rho_0) * exp(-1j*(m-v-1)*phi_0) 
         e = (m*(pi_mn(m, n, beta_q(q)/k)))*(k/beta_q(q)) + (tau_mn(m, n, beta_q(q)/k))
         f = s.jv(m-v+1, h_q(q)*rho_0)*exp(-1j*(m-v+1)*phi_0)

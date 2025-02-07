@@ -26,16 +26,16 @@ def F_z1(z, L):
                         torch.tensor(0))
     return(value)
 
-
 def F_z2(z):
 
     z_tensor = torch.as_tensor(z)
     L_tensor = torch.as_tensor(L)
 
-    condition = ((z_tensor >= 2*L_tensor/8) & ( z_tensor <= 6*L_tensor/8))
+    condition = (z_tensor >= 2*L_tensor/8) & ( z_tensor <= 6*L_tensor/8)
+    expoente = (10**(4))*(z_tensor - 6*L_tensor/8)/2
     
     value = torch.where(condition,
-                        torch.exp(((10**(4))*(z_tensor - 6*L_tensor/8)/2)),
+                        torch.exp(expoente),
                         torch.tensor(0))
     
     return(value)
@@ -67,6 +67,8 @@ def F_z4(z):
     
     return(value)
 
+
+#funcao artigo 
 def F_z5(z):
 
     z_tensor = torch.as_tensor(z)
