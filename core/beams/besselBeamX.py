@@ -23,7 +23,7 @@ Ordens negativas: `neg` define P_n^m para m<0:
   'rel' -> P_n^{-|m|} = (-1)^{|m|}(n-|m|)!/(n+|m|)! P_n^{|m|}  (padrao do projeto)
   'abs' -> P_n^{|m|}
 A escolha foi fixada pela reconstrucao do campo incidente contra a Eq. (1) de
-Wang 2017 (testes/validacao_besselX.py).
+Wang 2017 (tests/validacao_besselX.py).
 """
 import numpy as np
 import scipy.special as sp

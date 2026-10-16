@@ -8,7 +8,7 @@ from Aq import Aq_2_vec
 # Fast Beam Shape Coefficients for Frozen Waves -- POLARIZACAO LINEAR EM X
 # -----------------------------------------------------------------------------
 # Formulacao validada (Eqs. 18/19 do artigo): NAO ALTERAR. Refatoracoes devem
-# passar em testes/regressao_fw.py (igualdade bit a bit).
+# passar em tests/regressao_fw.py (igualdade bit a bit).
 #
 # Difere do feixe de Bessel do TCC (besselBeam.py) por ser OUTRO modelo de
 # polarizacao: aqui o colchete TE tem k/beta no termo m*pi; no Bessel

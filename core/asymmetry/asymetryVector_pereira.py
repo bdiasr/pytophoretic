@@ -25,8 +25,8 @@ Forma implementada (Pereira, Eq. 8):
     (sinal superior: x; inferior: y).  B_n: idem com d_n, TE e prefator |eta_r|^2/(n+1)^2.
     C_n = (2n+1)/[n(n+1)]^2 eta_r^* c_n d_n^* { sum_{m=0}^{n-1} (g^{m+1}_TM g^{m*}_TE +/- g^m_TM g^{m+1*}_TE) (n+m+1)!/(n-m-1)!
                                               - sum_{m=-n}^{-1}  (idem) (n+|m|)!/(n-|m|)! }
-Verificacao: testes/diagnostico_pereira2025.py (R = 1 +/- 3e-11 contra a integral
-de definicao, casos B1-B4 de testes/verificacao_ras.py).
+Verificacao: tests/diagnostico_pereira2025.py (R = 1 +/- 3e-11 contra a integral
+de definicao, casos B1-B4 de tests/verificacao_ras.py).
 """
 import math
 import numpy as np

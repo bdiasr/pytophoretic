@@ -18,7 +18,7 @@ nas figuras usadas z0 = 0.
   o campo reconstruido falha na translacao off-axis (erro ~0,6-0,9) e, para l != 0,
   E_z nao e' proporcional a J_l; com a forma acima ambos os testes dao ~1e-14.
   modo TE (Eq. 32):  g_TM^{(TE)} = g_TE^{(TM)},  g_TE^{(TE)} = -g_TM^{(TM)}.
-Validacao: testes/validacao_besselRA.py.
+Validacao: tests/validacao_besselRA.py.
 """
 import numpy as np
 import scipy.special as sp

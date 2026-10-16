@@ -91,7 +91,7 @@ Validação dos BSCs:
 
 - **B1:** a forma de $`\pi_n^m`$ acima.
 - **B4:** o fator $`k/\beta_q`$ multiplica $`m\pi_n^m`$ nos dois colchetes do TE.
-- **Testes:** `testes/teste_B1_B4_isolado.py` e `testes/regressao_fw.py`.
+- **Testes:** `tests/teste_B1_B4_isolado.py` e `tests/regressao_fw.py`.
 
 ### 2.2 Feixe de Bessel polarizado em $`x`$ (`besselBeamX.py`, Wang et al. 2017)
 
@@ -279,19 +279,19 @@ $`|\mathbf E(r,\theta,\varphi)|^2/|E_0|^2`$ dentro da partícula, pela expansão
 
 ```mermaid
 flowchart TD
-    subgraph CFG["Configuração"]
+    subgraph CFG["core/config"]
         CTE["cte.py<br/>λ, k, Q, L, N, M, ε'', η_r"]
         FZ["Fz.py<br/>perfis F(z): F1, F2"]
         AQ["Aq.py<br/>A_q (Simpson, 301 pts)"]
     end
 
-    subgraph ESP["Funções especiais"]
+    subgraph ESP["core/math"]
         SPC["specials.py<br/>ψ_n, ξ_n e derivadas"]
         BSC["bsc_common.py<br/>P_n^m, π_n^m, τ_n^m, fatoriais"]
         LEG["legendre.py<br/>(legado de 2024)"]
     end
 
-    subgraph FEI["Feixes → BSCs g_n,TM^m e g_n,TE^m"]
+    subgraph FEI["core/beams: BSCs g_n,TM^m e g_n,TE^m"]
         FW["beamShape.py<br/>Frozen Wave (Eqs. 18–19, B1/B4)"]
         FWF["fw_field.py<br/>Ψ(ρ,φ,z) da FW"]
         BX["besselBeamX.py<br/>Bessel pol. x (Wang 2017)"]
@@ -302,24 +302,24 @@ flowchart TD
         RES["beams.py<br/>resolver_bsc(beam)"]
     end
 
-    subgraph MIE["GLMT"]
+    subgraph MIE["core/glmt"]
         COEF["coefficients.py<br/>c_n, d_n, R_n, S_n, D/E/F"]
     end
 
-    subgraph ASS["Vetor de assimetria J"]
+    subgraph ASS["core/asymmetry: vetor J"]
         AVZ["asymetryVector.py<br/>J_z (e J_x, J_y → Pereira)"]
         AVP["asymetryVector_pereira.py<br/>J_x, J_y (Eqs. 8–11)"]
         AVA["asymetryVector_antigo.py<br/>fórmula antiga (comparação)"]
     end
 
-    subgraph SAI["Grandezas físicas"]
+    subgraph SAI["core/force e core/glmt"]
         FOT["fotoforese_pereira.py<br/>C_abs, temperaturas, F_ph (Eq. 6.14)"]
         CI["campo_interno.py<br/>campo E² dentro da partícula"]
     end
 
-    SIM["simulacoes/*.py<br/>(Ex1, Ex2, 1064 nm, IPC, Jiajie, tese, TCC, campo interno)"]
+    SIM["simulations/*.py<br/>(Ex1, Ex2, 1064 nm, IPC, Jiajie, tese, TCC, campo interno)"]
     FIG[("figs/<br/>figuras e dados")]
-    TST["testes/*.py<br/>regressão e validações"]
+    TST["tests/*.py<br/>regressão e validações"]
 
     CTE --> FZ --> AQ --> FW
     CTE --> FW
@@ -379,22 +379,41 @@ flowchart LR
 
 | Pasta | Conteúdo | No git? |
 |---|---|---|
-| raiz | módulos do núcleo (seções 2–6) | sim |
-| `simulacoes/` | scripts de cada simulação | não |
-| `testes/` | regressão e validações | não |
+| `core/config/` | `cte.py`, `Fz.py`, `Aq.py`: constantes, perfis $`F(z)`$, $`A_q`$ | sim |
+| `core/math/` | `specials.py`, `bsc_common.py`, `legendre.py`: Riccati–Bessel, $`P_n^m`$, $`\pi_n^m`$, $`\tau_n^m`$ | sim |
+| `core/beams/` | `beamShape.py`, `fw_field.py`, `frozenWaveX.py`, `besselBeam*.py`, `planeWave.py`, `beams.py`: BSCs de cada feixe | sim |
+| `core/glmt/` | `coefficients.py`, `campo_interno.py`: coeficientes de Mie e campo interno | sim |
+| `core/asymmetry/` | `asymetryVector.py`, `asymetryVector_pereira.py`, `asymetryVector_antigo.py` | sim |
+| `core/force/` | `fotoforese_pereira.py` | sim |
+| `simulations/` | um script por simulação (`simulations/legacy/`: formulação anterior) | não |
+| `tests/` | regressão e validações | não |
 | `figs/` | figuras e dados gerados | não |
-| `relatorios/` | relatórios, constantes e índice das simulações (`relatorios/INDICE_SIMULACOES.md`) | não |
-| `legado/`, `_arquivo/` | código antigo, backups e histórico | não |
+| `reports/` | relatórios, constantes e índice das simulações (`reports/INDICE_SIMULACOES.md`) | não |
+| `legacy/`, `_archive/` | código antigo, backups e histórico | não |
 
-Para saber qual simulação estuda o quê, qual script a gera e se o resultado ainda vale, consulte `relatorios/INDICE_SIMULACOES.md`.
+Para saber qual simulação estuda o quê, qual script a gera e se o resultado ainda vale, consulte `reports/INDICE_SIMULACOES.md`.
+
+### Como importar os módulos do núcleo
+
+O `core/__init__.py` só adiciona as subpastas ao `sys.path`, e cada módulo continua com o nome curto. Um script em `simulations/` ou `tests/` começa assim:
+
+```python
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # raiz do repositório
+import core                     # adiciona core/config, core/math, core/beams, ... ao sys.path
+import beamShape, cte           # nomes curtos, como antes
+from asymetryVector_pereira import I_xy
+```
+
+O `import core` não importa nenhum módulo. Por isso, os scripts que redefinem o `cte` antes de importar os módulos de feixe (`simulations/fw1064_comum.py`, `simulations/ipc2024.py`) continuam funcionando.
 
 ---
 
 ## 8. Verificações rápidas
 
-- `python testes/regressao_fw.py`: deve imprimir `REGRESSAO OK`.
-- `python testes/teste_B1_B4_isolado.py`: efeito isolado das correções B1/B4 na FW.
-- `python testes/verificacao_sinal_Ix.py`: convenção de sinal e geometria de $`J_x`$.
+- `python tests/regressao_fw.py`: deve imprimir `REGRESSAO OK` (verificação bit a bit dos BSCs da FW e de $`J`$).
+- `python tests/verificacao_fw1064.py`: FW em 1064 nm e regressão em 514 nm.
+- `python tests/verificacao_sinal_Ix.py`: convenção de sinal e geometria de $`J_x`$.
 
 ## 9. Dependências
 

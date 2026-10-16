@@ -3,7 +3,7 @@
 Campo eletrico INTERNO de uma esfera homogenea (GLMT, exp(+i w t)), com
 permeabilidade relativa mu_r arbitraria.
 
-Generaliza testes/verificacao_ras.campo_interno (validado com mu_r = 1:
+Generaliza tests/verificacao_ras.campo_interno (validado com mu_r = 1:
 integral de definicao de J e C_abs) seguindo Ambrosio, JQSRT 255, 107276
 (2020), Eqs. (6a)-(6c) e (10a)-(10b):
   - c_n, d_n = coefficients.cs_n / ds_n com mi = mu_r  (Eqs. 10a/10b)

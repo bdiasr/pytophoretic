@@ -2,7 +2,7 @@
 """
 Frozen Wave POLARIZADA EM x construida a partir do feixe de Bessel de Wang 2017
 ===============================================================================
-Referencia da deducao: relatorios/deducao_bscs_coeficientes.tex, Secao 3.6,
+Referencia da deducao: reports/deducao_bscs_coeficientes.tex, Secao 3.6,
 Eqs. (24)-(25). A FW e' a superposicao de 2N+1 feixes de Bessel polarizados em x
 (Wang et al., Opt. Commun. 387, 102 (2017), Eqs. 15/17) com
 
@@ -18,7 +18,7 @@ paraxial h_q), amplitude g(alpha_q) (1/2 = aplanatico).
 
 Interface identica aos demais feixes: g_mnTM / g_mnTE(m, n, v, alpha1, lamb,
 rho_0, phi_0, x_0, y_0, z_0); alpha1 e lamb sao ignorados.
-Validacao: testes/validacao_frozenWaveX.py.
+Validacao: tests/validacao_frozenWaveX.py.
 """
 import numpy as np
 import scipy.special as sp

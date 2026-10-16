@@ -4,7 +4,7 @@ Utilitarios COMUNS aos Beam Shape Coefficients (BSCs) de todos os feixes.
 
 Extraidos de beamShape.py (2026-09) sem alterar nenhuma operacao: as funcoes
 abaixo reproduzem, na mesma ordem de operacoes em ponto flutuante, o que
-beamShape fazia internamente. A regressao testes/regressao_fw.py verifica
+beamShape fazia internamente. A regressao tests/regressao_fw.py verifica
 igualdade BIT A BIT da Frozen Wave antes/depois da extracao.
 
 Usado por:
