@@ -1,34 +1,36 @@
 # pytophoretic
 
-Simulação do **vetor de assimetria** e da **força fotoforética** sobre partículas esféricas iluminadas por feixes estruturados (Frozen Waves, feixes de Bessel, onda plana), pela Teoria Generalizada de Lorenz–Mie (GLMT).
+**English** | [Português](README.pt-BR.md)
 
-Mestrado de Beatriz Helena Rocha (EESC/USP, grupo AEG).
+Simulation of the **asymmetry vector** and the **photophoretic force** on spherical particles illuminated by structured beams (Frozen Waves, Bessel beams, plane wave), within the Generalized Lorenz–Mie Theory (GLMT).
 
-> Estado do código em 16/10/2026: componentes transversais $`J_x, J_y`$ pelas expressões corrigidas de D. Pereira; $`J_z`$ inalterado. A Frozen Wave usa as correções B1 ($`\pi_n^m`$) e B4 (termo $`g`$ do modo TE). A análise de equilíbrio é feita na posição da partícula $`X=-\rho_0`$.
+Master's research of Beatriz Helena Rocha (EESC/USP, AEG group).
+
+> Code status as of 2026-10-16: the transverse components $`J_x, J_y`$ use the corrected expressions of D. Pereira; $`J_z`$ is unchanged. The Frozen Wave uses corrections B1 ($`\pi_n^m`$) and B4 ($`g`$ term of the TE mode). Equilibrium analysis is done at the particle position $`X=-\rho_0`$.
 
 ---
 
-## 1. Convenções
+## 1. Conventions
 
-| Item | Convenção |
+| Item | Convention |
 |---|---|
-| Dependência temporal | $`e^{+i\omega t}`$ |
-| Índice relativo | $`M = n - i\kappa`$ ($`\kappa>0`$ absorve), $`\mu_r`$ permeabilidade relativa |
-| Permissividade | $`\varepsilon_r = M^2/\mu_r`$, $`\varepsilon'' = -\,\mathrm{Im}(M^2/\mu_r)`$ (`cte.epsilonR2`) |
-| Impedância relativa | $`\eta_r = \sqrt{\mu_r/\varepsilon_r}`$ (`cte.Eta_r`) |
-| Parâmetro de tamanho | $`x = k a = 2\pi a/\lambda`$ |
-| Posição | $`(\rho_0,\varphi_0)`$ = posição do **eixo do feixe** vista da partícula. A partícula está em $`(X,Y) = -\rho_0(\cos\varphi_0,\sin\varphi_0)`$. |
-| Força | $`\mathbf F = -C_{Kn}\,\mathbf J`$ |
-| Equilíbrio radial estável | $`J_x = 0`$ e $`\partial J_x/\partial X > 0`$ (partícula sobre o eixo $`x`$); em geral, $`J_r`$ cruza zero crescendo com a distância ao eixo |
-| Truncamento | $`n_{\max} = \lceil x + 4{,}05\,x^{1/3} + 2\rceil`$ (Wiscombe) |
+| Time dependence | $`e^{+i\omega t}`$ |
+| Relative refractive index | $`M = n - i\kappa`$ ($`\kappa>0`$ absorbs), $`\mu_r`$ relative permeability |
+| Permittivity | $`\varepsilon_r = M^2/\mu_r`$, $`\varepsilon'' = -\,\mathrm{Im}(M^2/\mu_r)`$ (`cte.epsilonR2`) |
+| Relative impedance | $`\eta_r = \sqrt{\mu_r/\varepsilon_r}`$ (`cte.Eta_r`) |
+| Size parameter | $`x = k a = 2\pi a/\lambda`$ |
+| Position | $`(\rho_0,\varphi_0)`$ = position of the **beam axis** as seen from the particle. The particle is at $`(X,Y) = -\rho_0(\cos\varphi_0,\sin\varphi_0)`$. |
+| Force | $`\mathbf F = -C_{Kn}\,\mathbf J`$ |
+| Stable radial equilibrium | $`J_x = 0`$ and $`\partial J_x/\partial X > 0`$ (particle on the $`x`$ axis); in general, $`J_r`$ crosses zero increasing with the distance to the axis |
+| Truncation | $`n_{\max} = \lceil x + 4.05\,x^{1/3} + 2\rceil`$ (Wiscombe) |
 
 ---
 
-## 2. Feixes e coeficientes de forma (BSCs)
+## 2. Beams and beam shape coefficients (BSCs)
 
 ### 2.1 Frozen Wave (`fw_field.py`, `Aq.py`, `Fz.py`, `beamShape.py`)
 
-Campo escalar de ordem $`v`$, com $`2N+1`$ feixes de Bessel:
+Scalar field of order $`v`$, built from $`2N+1`$ Bessel beams:
 
 ```math
 \Psi(\rho,\varphi,z) = \sum_{q=-N}^{N} A_q\, J_v(h_q\rho)\, e^{iv\varphi}\, e^{-i\beta_q z},
@@ -38,28 +40,28 @@ A_q = \frac{1}{L}\int_0^L F(z)\, e^{\,i2\pi q z/L}\,dz,
 
 ```math
 \beta_q = Q + \frac{2\pi q}{L},\qquad
-h_q = \sqrt{2}\,k\sqrt{1-\beta_q/k}\ \ (\text{forma paraxial de } \sqrt{k^2-\beta_q^2}).
+h_q = \sqrt{2}\,k\sqrt{1-\beta_q/k}\ \ (\text{paraxial form of } \sqrt{k^2-\beta_q^2}).
 ```
 
-- **Coeficientes $`A_q`$:** calculados por Simpson composto com 301 pontos em $`[0,L]`$.
-- **Feixes propagantes:** exige-se $`0 \le \beta_q \le k`$, o que dá $`N \le \lfloor (k-Q)L/2\pi \rfloor`$.
+- **Coefficients $`A_q`$:** computed with composite Simpson's rule, 301 points on $`[0,L]`$.
+- **Propagating beams only:** $`0 \le \beta_q \le k`$, which gives $`N \le \lfloor (k-Q)L/2\pi \rfloor`$.
 
-**Perfis longitudinais** $`F(z)`$ (`Fz.py`):
+**Longitudinal profiles** $`F(z)`$ (`Fz.py`):
 
-- **F1** (polinomial por partes), com $`\ell_1..\ell_6 = L/10,\,3L/10,\,4L/10,\,6L/10,\,7L/10,\,9L/10`$:
+- **F1** (piecewise polynomial), with $`\ell_1..\ell_6 = L/10,\,3L/10,\,4L/10,\,6L/10,\,7L/10,\,9L/10`$:
 
 ```math
 F_1(z)=\begin{cases}
 -4\,\dfrac{(z-\ell_1)(z-\ell_2)}{(\ell_2-\ell_1)^2}, & \ell_1\le z\le \ell_2\\[4pt]
 1, & \ell_3\le z\le \ell_4\\[4pt]
 -4\,\dfrac{(z-\ell_5)(z-\ell_6)}{(\ell_6-\ell_5)^2}, & \ell_5\le z\le \ell_6\\[4pt]
-0, & \text{fora}
+0, & \text{otherwise}
 \end{cases}
 ```
 
-- **F2** (gaussiana modulada): $`F_2(z) = e^{-5(z-L/2)^2/L^2}\cos(6\pi z/L)`$ em $`[L/12,\,11L/12]`$.
+- **F2** (modulated Gaussian): $`F_2(z) = e^{-5(z-L/2)^2/L^2}\cos(6\pi z/L)`$ on $`[L/12,\,11L/12]`$.
 
-**BSCs da FW** (polarização linear em $`x`$; Eqs. 18–19), com $`\cos\alpha_q = \beta_q/k`$ e as funções angulares avaliadas em $`\cos\alpha_q`$:
+**FW BSCs** (linear $`x`$ polarization; Eqs. 18–19), with $`\cos\alpha_q = \beta_q/k`$ and the angular functions evaluated at $`\cos\alpha_q`$:
 
 ```math
 \pi_n^m = \frac{P_n^m(\cos\alpha_q)}{\sin\alpha_q},\qquad
@@ -85,13 +87,13 @@ g^m_{n,TE} = -\tfrac{i}{2}\, i^{m+1}(-1)^{\frac{m-|m|}{2}}\frac{(n-m)!}{(n+|m|)!
 \mathcal J^{\mp}_{q} = J_{m-v\mp1}(h_q\rho_0)\, e^{-i(m-v\mp1)\varphi_0}.
 ```
 
-Validação dos BSCs:
+BSC validation:
 
-- **B1:** a forma de $`\pi_n^m`$ acima.
-- **B4:** o fator $`k/\beta_q`$ multiplica $`m\pi_n^m`$ nos dois colchetes do TE.
-- **Testes:** `testes/teste_B1_B4_isolado.py` e `testes/regressao_fw.py`.
+- **B1:** the form of $`\pi_n^m`$ above.
+- **B4:** the factor $`k/\beta_q`$ multiplies $`m\pi_n^m`$ in both TE brackets.
+- **Tests:** `testes/teste_B1_B4_isolado.py` and `testes/regressao_fw.py`.
 
-### 2.2 Feixe de Bessel polarizado em $`x`$ (`besselBeamX.py`, Wang et al. 2017)
+### 2.2 $`x`$-polarized Bessel beam (`besselBeamX.py`, Wang et al. 2017)
 
 ```math
 g^m_{n,TM} = -g(\alpha_0)(-1)^{\frac{m-|m|}{2}}\frac{(n-m)!}{(n+|m|)!}e^{ik_z z_0}
@@ -105,12 +107,12 @@ g^m_{n,TE} = i\,g(\alpha_0)(-1)^{\frac{m-|m|}{2}}\frac{(n-m)!}{(n+|m|)!}e^{ik_z 
 - i^{l-m-1}e^{i(l-m-1)\varphi_0}J_{l-m-1}(s_0)\,[\tau_n^m - m\pi_n^m]\Big\}
 ```
 
-- $`s_0 = k\sin\alpha_0\,\rho_0`$, $`k_z = k\cos\alpha_0`$, e $`\pi_n^m,\tau_n^m`$ avaliados em $`\cos\alpha_0`$.
-- $`g(\alpha_0)=1/2`$ (aplanático).
+- $`s_0 = k\sin\alpha_0\,\rho_0`$, $`k_z = k\cos\alpha_0`$, with $`\pi_n^m,\tau_n^m`$ evaluated at $`\cos\alpha_0`$.
+- $`g(\alpha_0)=1/2`$ (aplanatic).
 
-### 2.3 Feixe de Bessel radial (TM) e azimutal (TE), $`l=0`$ (`besselBeamRA.py`)
+### 2.3 Radially (TM) and azimuthally (TE) polarized Bessel beams, $`l=0`$ (`besselBeamRA.py`)
 
-Modo TM (radial):
+TM mode (radial):
 
 ```math
 g^m_{n,TM} = -g(-1)^{\frac{m-|m|}{2}}\frac{(n-m)!}{(n+|m|)!}e^{ik_zz_0}\,i^{m-l}J_{m-l}(k_\rho\rho_0)e^{i(l-m)\varphi_0}\,\tau_n^m,
@@ -120,23 +122,23 @@ g^m_{n,TM} = -g(-1)^{\frac{m-|m|}{2}}\frac{(n-m)!}{(n+|m|)!}e^{ik_zz_0}\,i^{m-l}
 g^m_{n,TE} = g(-1)^{\frac{m-|m|}{2}}\frac{(n-m)!}{(n+|m|)!}e^{ik_zz_0}\,i^{m-l+1}J_{m-l}(k_\rho\rho_0)e^{i(l-m)\varphi_0}\,m\pi_n^m.
 ```
 
-Modo TE (azimutal): $`g_{TM}^{(TE)} = g_{TE}^{(TM)}`$ e $`g_{TE}^{(TE)} = -g_{TM}^{(TM)}`$.
+TE mode (azimuthal): $`g_{TM}^{(TE)} = g_{TE}^{(TM)}`$ and $`g_{TE}^{(TE)} = -g_{TM}^{(TM)}`$.
 
-### 2.4 Onda plana polarizada em $`x`$ (`planeWave.py`)
+### 2.4 $`x`$-polarized plane wave (`planeWave.py`)
 
 ```math
 g^{\pm1}_{n,TM} = \pm i\,g^{\pm1}_{n,TE} = \tfrac12 e^{ikz_0},\qquad g^m_{n,TM}=g^m_{n,TE}=0\ \ (|m|\ne1).
 ```
 
-O feixe é escolhido em `beams.resolver_bsc(beam)`: `beam=None` corresponde à Frozen Wave de `beamShape.py`, e qualquer outro objeto deve ter os métodos `g_mnTM`/`g_mnTE`.
+The beam is selected by `beams.resolver_bsc(beam)`: `beam=None` means the Frozen Wave of `beamShape.py`, and any other object must provide `g_mnTM`/`g_mnTE` methods.
 
 ---
 
-## 3. Coeficientes de Mie (`coefficients.py`, `specials.py`)
+## 3. Mie coefficients (`coefficients.py`, `specials.py`)
 
-Funções de Riccati–Bessel: $`\psi_n(z) = z\,j_n(z)`$ e $`\xi_n(z) = z\,h_n^{(2)}(z)`$, esta última por causa da convenção $`e^{+i\omega t}`$.
+Riccati–Bessel functions: $`\psi_n(z) = z\,j_n(z)`$ and $`\xi_n(z) = z\,h_n^{(2)}(z)`$; the second kind follows from the $`e^{+i\omega t}`$ convention.
 
-**Coeficientes internos:**
+**Internal coefficients:**
 
 ```math
 c_n = \frac{M\mu_r\,[\xi_n(x)\psi_n'(x) - \xi_n'(x)\psi_n(x)]}{\mu_r\,\xi_n(x)\psi_n'(Mx) - M\,\xi_n'(x)\psi_n(Mx)},
@@ -144,14 +146,14 @@ c_n = \frac{M\mu_r\,[\xi_n(x)\psi_n'(x) - \xi_n'(x)\psi_n(x)]}{\mu_r\,\xi_n(x)\p
 d_n = \frac{M^2\,[\xi_n(x)\psi_n'(x) - \xi_n'(x)\psi_n(x)]}{M\,\xi_n(x)\psi_n'(Mx) - \mu_r\,\xi_n'(x)\psi_n(Mx)}.
 ```
 
-**Coeficientes externos** ($`\mu_r=1`$, usados nas seções de choque):
+**External coefficients** ($`\mu_r=1`$, used in the cross sections):
 
 ```math
 a_n = \frac{\psi_n(x)\psi_n'(Mx) - M\psi_n'(x)\psi_n(Mx)}{\xi_n(x)\psi_n'(Mx) - M\xi_n'(x)\psi_n(Mx)},\qquad
 b_n = \frac{M\psi_n(x)\psi_n'(Mx) - \psi_n'(x)\psi_n(Mx)}{M\xi_n(x)\psi_n'(Mx) - \xi_n'(x)\psi_n(Mx)}.
 ```
 
-**Funções radiais** da integral da fonte de calor:
+**Radial functions** of the heat-source integral:
 
 ```math
 R_n = \frac{\mathrm{Im}\!\left[M\,\psi_{n+1}(Mx)\,\psi_n^*(Mx)\right]}{\mathrm{Im}(M^2)},
@@ -163,17 +165,17 @@ S_n = -\frac{i}{2\,\mathrm{Im}(M^2)}\Big[x\big(M|\psi_n(Mx)|^2 + M^*|\psi_{n+1}(
 
 ---
 
-## 4. Vetor de assimetria (`asymetryVector.py`, `asymetryVector_pereira.py`)
+## 4. Asymmetry vector (`asymetryVector.py`, `asymetryVector_pereira.py`)
 
-Definição:
+Definition:
 
 ```math
 \mathbf J = \frac{1}{V_p}\int_{V_p} \frac{\mathbf r}{a}\,B(\mathbf r)\,dV,\qquad B = \frac{|\mathbf E|^2}{|E_0|^2}.
 ```
 
-O código retorna $`J_i = \dfrac{3\varepsilon''}{8\pi a^3}\,\mathcal I_i`$.
+The code returns $`J_i = \dfrac{3\varepsilon''}{8\pi a^3}\,\mathcal I_i`$.
 
-### 4.1 Componente longitudinal (inalterada)
+### 4.1 Longitudinal component (unchanged)
 
 ```math
 J_z = \frac{6\varepsilon''}{|M|^2x^3}\,\mathrm{Im}\sum_{n=1}^{n_{\max}}\sum_{m=-n}^{n}
@@ -189,7 +191,7 @@ E_n^m = \frac{|\eta_r|^2\,d_n^*d_{n+1}}{(n+1)^2}\,g^{m*}_{n,TE}\,g^m_{n+1,TE}\fr
 F_n^m = m\,\eta_r^*\,\frac{2n+1}{[n(n+1)]^2}\,c_n d_n^*\,g^m_{n,TM}\,g^{m*}_{n,TE}\frac{(n+|m|)!}{(n-|m|)!}.
 ```
 
-### 4.2 Componentes transversais (D. Pereira, nota JxJy_mod, Eqs. 8–11)
+### 4.2 Transverse components (D. Pereira, technical note JxJy_mod, Eqs. 8–11)
 
 ```math
 J_{x;y} = -\frac{3\varepsilon''}{|M|^2x^3}\,\Big\{\mathrm{Im};\mathrm{Re}\Big\}\sum_{n=1}^{n_{\max}}
@@ -206,31 +208,31 @@ A_n = \frac{c_n^*c_{n+1}}{(n+1)^2}\Big\{
 \end{aligned}
 ```
 
-$`B_n`$: igual a $`A_n`$ com $`c_n\to d_n`$, TM → TE e prefator $`|\eta_r|^2/(n+1)^2`$.
+$`B_n`$: same as $`A_n`$ with $`c_n\to d_n`$, TM → TE and prefactor $`|\eta_r|^2/(n+1)^2`$.
 
 ```math
 C_n = \frac{2n+1}{[n(n+1)]^2}\,\eta_r^*\,c_nd_n^*\Big\{\sum_{m=0}^{n-1}\big(g^{m+1}_{n,TM}g^{m*}_{n,TE} \pm g^{m}_{n,TM}g^{m+1*}_{n,TE}\big)\frac{(n+m+1)!}{(n-m-1)!}
 -\sum_{m=-n}^{-1}(\cdots)\frac{(n+|m|)!}{(n-|m|)!}\Big\}
 ```
 
-O sinal superior vale para $`J_x`$ e o inferior para $`J_y`$. A formulação anterior (Ambrosio 2022, Eqs. 30a–31) está congelada em `asymetryVector_antigo.py`, só para comparação.
+The upper sign applies to $`J_x`$ and the lower sign to $`J_y`$. The previous formulation (Ambrosio 2022, Eqs. 30a–31) is frozen in `asymetryVector_antigo.py`, for comparison only.
 
-### 4.3 Componentes radial e transversal
+### 4.3 Radial and transverse components
 
-Para a partícula em $`\theta = \varphi_0 + \pi`$:
+For the particle at $`\theta = \varphi_0 + \pi`$:
 
 ```math
 J_r = J_x\cos\theta + J_y\sin\theta,\qquad J_\varphi = -J_x\sin\theta + J_y\cos\theta.
 ```
 
-- No eixo $`x`$: $`J_r = \pm J_x`$ e $`J_\varphi = \pm J_y`$, isto é, $`J_y`$ é orbital.
-- No eixo $`y`$: $`J_r = \pm J_y`$.
+- On the $`x`$ axis: $`J_r = \pm J_x`$ and $`J_\varphi = \pm J_y`$, so $`J_y`$ is orbital.
+- On the $`y`$ axis: $`J_r = \pm J_y`$.
 
 ---
 
-## 5. Força fotoforética (`fotoforese_pereira.py`)
+## 5. Photophoretic force (`fotoforese_pereira.py`)
 
-Modelo de Loesche–Husmann modificado generalizado (D. Pereira, tese, Eq. 6.14):
+Generalized modified Loesche–Husmann model (D. Pereira, thesis, Eq. 6.14):
 
 ```math
 \mathbf F_{ph} = -4\pi f_{pc}(T^*)\,\mu_g(T_\infty)\left[\frac{\mu_g(T_{gS})}{\rho_g(T_{gS})\,T_{gS}}\,\frac{K_S + 3K_hK_m\mathrm{Kn}}{1+3K_m\mathrm{Kn}}\right]
@@ -238,22 +240,22 @@ Modelo de Loesche–Husmann modificado generalizado (D. Pereira, tese, Eq. 6.14)
 \frac{I_\lambda\,\mathbf J}{\dfrac{k_p}{R_p} + \dfrac{\bar k_g}{R_p}\dfrac{2}{1+2K_T\mathrm{Kn}} + 4\sigma\epsilon\tilde T^3}
 ```
 
-**Grandezas:**
+**Quantities:**
 
-- **Knudsen:** $`\mathrm{Kn} = \ell/R_p`$.
-- **Coeficientes de deslizamento** (Tabela 2.1): $`K_S = 1{,}152`$, $`K_T = 2{,}179`$, $`K_m = 1{,}131`$, $`K_h`$ ajustável (usado 1).
-- **Prefator:** $`1/(1+2K_T\mathrm{Kn})`$, do L–H original; a forma impressa na tese é $`1/(2+2K_T\mathrm{Kn})`$. Fica pendente a confirmação com D. Pereira.
-- **Fator de correção:** $`f_{pc}(T^*) = -0{,}0171\,T^{*2} + 0{,}2851\,T^* + 0{,}7327`$, com $`T^* = T_{gS}/T_\infty`$ (ar).
+- **Knudsen number:** $`\mathrm{Kn} = \ell/R_p`$.
+- **Slip coefficients** (Table 2.1): $`K_S = 1.152`$, $`K_T = 2.179`$, $`K_m = 1.131`$, $`K_h`$ adjustable (1 is used).
+- **Prefactor:** $`1/(1+2K_T\mathrm{Kn})`$, from the original L–H model; the thesis prints $`1/(2+2K_T\mathrm{Kn})`$. Confirmation with D. Pereira is pending.
+- **Correction factor:** $`f_{pc}(T^*) = -0.0171\,T^{*2} + 0.2851\,T^* + 0.7327`$, with $`T^* = T_{gS}/T_\infty`$ (air).
 
-**Absorção** (Eq. 6.15):
+**Absorption** (Eq. 6.15):
 
 ```math
 J_0I_0 = \frac{C_{abs}\,I_\lambda}{4\pi R_p^2}.
 ```
 
-**Temperaturas** (Eqs. 5.3, 5.5, 5.6): $`\tilde T = T_{pS}`$, $`T_{gS}`$ e $`\bar k_g`$ são resolvidos em laço de ponto fixo, com tolerância $`10^{-10}`$.
+**Temperatures** (Eqs. 5.3, 5.5, 5.6): $`\tilde T = T_{pS}`$, $`T_{gS}`$ and $`\bar k_g`$ are solved in a fixed-point loop, tolerance $`10^{-10}`$.
 
-**Seções de choque da GLMT** (Eqs. 6.16–6.17), com $`C_{abs} = C_{ext} - C_{sca}`$:
+**GLMT cross sections** (Eqs. 6.16–6.17), with $`C_{abs} = C_{ext} - C_{sca}`$:
 
 ```math
 C_{ext} = \frac{\lambda^2}{\pi}\sum_{n}\frac{2n+1}{n(n+1)}\sum_{m}\frac{(n+|m|)!}{(n-|m|)!}\,\mathrm{Re}\big(a_n|g^m_{n,TM}|^2 + b_n|g^m_{n,TE}|^2\big)
@@ -263,40 +265,40 @@ C_{ext} = \frac{\lambda^2}{\pi}\sum_{n}\frac{2n+1}{n(n+1)}\sum_{m}\frac{(n+|m|)!
 C_{sca} = \frac{\lambda^2}{\pi}\sum_{n}\frac{2n+1}{n(n+1)}\sum_{m}\frac{(n+|m|)!}{(n-|m|)!}\big(|a_n|^2|g^m_{n,TM}|^2 + |b_n|^2|g^m_{n,TE}|^2\big)
 ```
 
-**Peso:** $`mg = \rho_p\,\tfrac43\pi R_p^3\,g`$.
+**Weight:** $`mg = \rho_p\,\tfrac43\pi R_p^3\,g`$.
 
 ---
 
-## 6. Campo interno (`campo_interno.py`)
+## 6. Internal field (`campo_interno.py`)
 
-$`|\mathbf E(r,\theta,\varphi)|^2/|E_0|^2`$ dentro da partícula, pela expansão em ondas esféricas vetoriais com os coeficientes internos $`c_n, d_n`$ e os BSCs do feixe. É a função fonte $`B(\mathbf r)`$ que gera a assimetria de aquecimento, no estilo das Figs. 2–3 de Ambrosio 2020.
+$`|\mathbf E(r,\theta,\varphi)|^2/|E_0|^2`$ inside the particle, from the vector spherical wave expansion with the internal coefficients $`c_n, d_n`$ and the beam's BSCs. This is the source function $`B(\mathbf r)`$ that produces the heating asymmetry, following Figs. 2–3 of Ambrosio 2020.
 
 ---
 
-## 7. Organização do código
+## 7. Code organization
 
 ```mermaid
 flowchart TD
-    subgraph CFG["Configuração"]
+    subgraph CFG["Configuration"]
         CTE["cte.py<br/>λ, k, Q, L, N, M, ε'', η_r"]
-        FZ["Fz.py<br/>perfis F(z): F1, F2"]
+        FZ["Fz.py<br/>profiles F(z): F1, F2"]
         AQ["Aq.py<br/>A_q (Simpson, 301 pts)"]
     end
 
-    subgraph ESP["Funções especiais"]
-        SPC["specials.py<br/>ψ_n, ξ_n e derivadas"]
-        BSC["bsc_common.py<br/>P_n^m, π_n^m, τ_n^m, fatoriais"]
-        LEG["legendre.py<br/>(legado de 2024)"]
+    subgraph ESP["Special functions"]
+        SPC["specials.py<br/>ψ_n, ξ_n and derivatives"]
+        BSC["bsc_common.py<br/>P_n^m, π_n^m, τ_n^m, factorials"]
+        LEG["legendre.py<br/>(2024 legacy)"]
     end
 
-    subgraph FEI["Feixes → BSCs g_n,TM^m e g_n,TE^m"]
+    subgraph FEI["Beams → BSCs g_n,TM^m and g_n,TE^m"]
         FW["beamShape.py<br/>Frozen Wave (Eqs. 18–19, B1/B4)"]
-        FWF["fw_field.py<br/>Ψ(ρ,φ,z) da FW"]
-        BX["besselBeamX.py<br/>Bessel pol. x (Wang 2017)"]
-        BRA["besselBeamRA.py<br/>Bessel radial/azimutal"]
-        BB["besselBeam.py<br/>Bessel do TCC"]
-        PW["planeWave.py<br/>onda plana"]
-        FWX["frozenWaveX.py<br/>FW pol. x (Wang)"]
+        FWF["fw_field.py<br/>FW field Ψ(ρ,φ,z)"]
+        BX["besselBeamX.py<br/>x-polarized Bessel (Wang 2017)"]
+        BRA["besselBeamRA.py<br/>radial/azimuthal Bessel"]
+        BB["besselBeam.py<br/>Bessel beam (TCC)"]
+        PW["planeWave.py<br/>plane wave"]
+        FWX["frozenWaveX.py<br/>x-polarized FW (Wang)"]
         RES["beams.py<br/>resolver_bsc(beam)"]
     end
 
@@ -304,20 +306,20 @@ flowchart TD
         COEF["coefficients.py<br/>c_n, d_n, R_n, S_n, D/E/F"]
     end
 
-    subgraph ASS["Vetor de assimetria J"]
-        AVZ["asymetryVector.py<br/>J_z (e J_x, J_y → Pereira)"]
+    subgraph ASS["Asymmetry vector J"]
+        AVZ["asymetryVector.py<br/>J_z (J_x, J_y → Pereira)"]
         AVP["asymetryVector_pereira.py<br/>J_x, J_y (Eqs. 8–11)"]
-        AVA["asymetryVector_antigo.py<br/>fórmula antiga (comparação)"]
+        AVA["asymetryVector_antigo.py<br/>previous formula (comparison)"]
     end
 
-    subgraph SAI["Grandezas físicas"]
-        FOT["fotoforese_pereira.py<br/>C_abs, temperaturas, F_ph (Eq. 6.14)"]
-        CI["campo_interno.py<br/>campo E² dentro da partícula"]
+    subgraph SAI["Physical quantities"]
+        FOT["fotoforese_pereira.py<br/>C_abs, temperatures, F_ph (Eq. 6.14)"]
+        CI["campo_interno.py<br/>internal field E²"]
     end
 
-    SIM["simulacoes/*.py<br/>(Ex1, Ex2, 1064 nm, IPC, Jiajie, tese, TCC, campo interno)"]
-    FIG[("figs/<br/>figuras e dados")]
-    TST["testes/*.py<br/>regressão e validações"]
+    SIM["simulacoes/*.py<br/>(Ex1, Ex2, 1064 nm, IPC, Jiajie, thesis, TCC, internal field)"]
+    FIG[("figs/<br/>figures and data")]
+    TST["testes/*.py<br/>regression and validation"]
 
     CTE --> FZ --> AQ --> FW
     CTE --> FW
@@ -353,55 +355,55 @@ flowchart TD
     CI --> SIM
     FWF --> SIM
     SIM --> FIG
-    TST -.->|"verifica"| FW
-    TST -.->|"verifica"| AVP
-    TST -.->|"verifica"| FOT
+    TST -.->|"checks"| FW
+    TST -.->|"checks"| AVP
+    TST -.->|"checks"| FOT
 ```
 
-### Cálculo de um ponto (fluxo típico)
+### Computing one point (typical flow)
 
 ```mermaid
 flowchart LR
-    A["Parâmetros<br/>λ, M, x, feixe, (ρ0, φ0, z0)"] --> B["BSCs<br/>g_n,TM^m e g_n,TE^m"]
+    A["Inputs<br/>λ, M, x, beam, (ρ0, φ0, z0)"] --> B["BSCs<br/>g_n,TM^m and g_n,TE^m"]
     A --> C["Mie<br/>c_n, d_n, R_n, S_n"]
     B --> D["J_z (D, E, F)<br/>J_x, J_y (A, B, C)"]
     C --> D
     B --> E["C_abs (a_n, b_n)"]
-    D --> F["Temperaturas<br/>T̃, T_gS, k̄_g"]
+    D --> F["Temperatures<br/>T̃, T_gS, k̄_g"]
     E --> F
     F --> G["F_ph = −C_Kn J"]
-    D --> H["Equilíbrios<br/>J_r = 0, dJ_r/dr > 0"]
+    D --> H["Equilibria<br/>J_r = 0, dJ_r/dr > 0"]
 ```
 
-### Pastas
+### Folders
 
-| Pasta | Conteúdo | No git? |
+| Folder | Contents | Tracked in git? |
 |---|---|---|
-| raiz | módulos do núcleo (seções 2–6) | sim |
-| `simulacoes/` | scripts de cada simulação | não |
-| `testes/` | regressão e validações | não |
-| `figs/` | figuras e dados gerados | não |
-| `relatorios/` | relatórios, constantes e índice das simulações (`relatorios/INDICE_SIMULACOES.md`) | não |
-| `legado/`, `_arquivo/` | código antigo, backups e histórico | não |
+| root | core modules (sections 2–6) | yes |
+| `simulacoes/` | one script per simulation | no |
+| `testes/` | regression and validation | no |
+| `figs/` | generated figures and data | no |
+| `relatorios/` | reports, constants and the simulation index (`relatorios/INDICE_SIMULACOES.md`) | no |
+| `legado/`, `_arquivo/` | legacy code, backups and history | no |
 
-Para saber qual simulação estuda o quê, qual script a gera e se o resultado ainda vale, consulte `relatorios/INDICE_SIMULACOES.md`.
+To find out what each simulation studies, which script produces it and whether the result is still valid, see `relatorios/INDICE_SIMULACOES.md` (in Portuguese).
 
 ---
 
-## 8. Verificações rápidas
+## 8. Quick checks
 
-- `python testes/regressao_fw.py`: deve imprimir `REGRESSAO OK`.
-- `python testes/teste_B1_B4_isolado.py`: efeito isolado das correções B1/B4 na FW.
-- `python testes/verificacao_sinal_Ix.py`: convenção de sinal e geometria de $`J_x`$.
+- `python testes/regressao_fw.py`: should print `REGRESSAO OK`.
+- `python testes/teste_B1_B4_isolado.py`: isolated effect of corrections B1/B4 on the FW.
+- `python testes/verificacao_sinal_Ix.py`: sign convention and geometry of $`J_x`$.
 
-## 9. Dependências
+## 9. Dependencies
 
-Ver `requirements.txt` (numpy, scipy, matplotlib, mpmath, numba, sympy, torch).
+See `requirements.txt` (numpy, scipy, matplotlib, mpmath, numba, sympy, torch).
 
-## 10. Referências principais
+## 10. Main references
 
-- L. A. Ambrosio et al. (2022): GLMT, vetor de assimetria e BSCs da onda plana; Ambrosio (2020), campo interno.
-- D. J. S. Pereira, nota técnica JxJy_mod (out. 2025) e tese "3D Photophoresis in Slip-flow" (Univ. Coimbra, 2026).
-- J. J. Wang et al., Opt. Commun. 387, 102 (2017): BSCs de feixes de Bessel.
-- Sun (Jiajie) et al., Appl. Opt. 61, 7632 (2022): força fotoforética com feixes de Bessel.
-- B. H. Rocha, de Sarro & Ambrosio, IPC 2024: vetor de assimetria com Frozen Waves.
+- L. A. Ambrosio et al. (2022): GLMT, asymmetry vector and plane-wave BSCs; Ambrosio (2020), internal field.
+- D. J. S. Pereira, technical note JxJy_mod (Oct. 2025) and thesis "3D Photophoresis in Slip-flow" (Univ. Coimbra, 2026).
+- J. J. Wang et al., Opt. Commun. 387, 102 (2017): Bessel beam BSCs.
+- Sun (Jiajie) et al., Appl. Opt. 61, 7632 (2022): photophoretic force with Bessel beams.
+- B. H. Rocha, de Sarro & Ambrosio, IPC 2024: asymmetry vector with Frozen Waves.

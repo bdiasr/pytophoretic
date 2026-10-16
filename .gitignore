@@ -1,4 +1,4 @@
-# --- Pastas fora do controle de versao (decisao da Bea, 16/10/2026) ---
+# --- Pastas fora do controle de versao ---
 __pycache__/
 _arquivo/
 .claude/
