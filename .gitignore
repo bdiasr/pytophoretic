@@ -1,0 +1,23 @@
+# --- Pastas fora do controle de versao (decisao da Bea, 16/10/2026) ---
+__pycache__/
+_arquivo/
+.claude/
+.vscode/
+figs/
+legado/
+relatorios/
+simulacoes/
+testes/
+
+# Artefatos de build do Python
+*.py[cod]
+*$py.class
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

@@ -1,69 +1,61 @@
-
-
-import scipy 
 import numpy as np
-import sympy as sym
-import math
-
-
-import scipy.integrate as integrate
-import cmath
 import scipy.special as s
-import matplotlib.pyplot as plt
-import os
-import mpmath
-from mpmath import fac, exp, sin, cos, besselj, legenp, sqrt
-
 
 
 def js_n(n, x):
-    '''
-    spherical bessel function 1 type 
-
-    j_n = spherical_jn(n, z, derivative = bool) = j_n 
-    '''
+    """
+    Spherical Bessel function of the first kind j_n(x).
+    """
     return s.spherical_jn(n, x, False)
 
+
 def js_nz(n, z):
-    
-    if(n<0):
+    if n < 0:
         return 0
-    else:
-        return np.where(not isinstance(z, complex) and z<0, (-1)**n*s.spherical_jn(n, -z, False), s.spherical_jn(n, z, False))
-        #return s.spherical_jn(n, z, False)
-        
+    # Keep the original sign-handling for negative real z (rare in this project)
+    if (not isinstance(z, complex)) and (z < 0):
+        return (-1) ** n * s.spherical_jn(n, -z, False)
+    return s.spherical_jn(n, z, False)
+
+
 def j0_nz(n, z):
     return s.jv(n, z, out=None)
 
 
 def ys_n(n, x):
-    '''
-    spherical bessel function 2 type
-    
-    y_n = spherical_jn(n, z, derivative = bool)
-    '''
+    """
+    Spherical Bessel function of the second kind y_n(x).
+    """
     return s.spherical_yn(n, x, False)
 
-#Ricatti Bessel 1type given by = x*(j_n(x))
+
 def psiBessel(n, x):
-    a = x*(s.spherical_jn(n, x, False))
-    return a
+    """
+    Riccati-Bessel ψ_n(x) = x * j_n(x)
+    """
+    return x * s.spherical_jn(n, x, False)
 
-#Ricatti Bessel 1type derivative
-derivativePsiBesseln = (lambda n, x: ((1 + n)*s.spherical_jn(n, x, False) - (x*s.spherical_jn((n + 1), x, False))))
 
-#Spherical Hankel H2 function 
+# Riccati-Bessel derivative: ψ'_n(x) = (n+1) j_n(x) - x j_{n+1}(x)
+derivativePsiBesseln = (lambda n, x: ((1 + n) * s.spherical_jn(n, x, False) - (x * s.spherical_jn((n + 1), x, False))))
+
+
 def sphericalHankel_n(n, x):
-    js_n = s.spherical_jn(n, x, False)
-    ys_n = s.spherical_yn(n, x, False)
-    return js_n - (ys_n*1j)
+    """
+    Spherical Hankel of the second kind: h_n^(2)(x) = j_n(x) - i y_n(x)
+    """
+    return s.spherical_jn(n, x, False) - 1j * s.spherical_yn(n, x, False)
 
-#Ricatti Bessel 2 type 
+
 def RiccatiBessel_2Type(n, x):
-    return x*(sphericalHankel_n(n, x))
+    """
+    Riccati-Bessel of the second kind: ξ_n(x) = x * h_n^(2)(x)
+    """
+    return x * sphericalHankel_n(n, x)
 
-#spherical hankel H2 derivative
+
 def derivativeSphericalHankel_n(n, x):
-    return (1+n)*sphericalHankel_n(n, x) - x*sphericalHankel_n((n+1), x)
-
-
+    """
+    Derivative of x*h_n^(2)(x): ξ'_n(x) = (n+1)h_n^(2)(x) - x h_{n+1}^(2)(x)
+    """
+    return (1 + n) * sphericalHankel_n(n, x) - x * sphericalHankel_n((n + 1), x)

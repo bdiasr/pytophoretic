@@ -11,38 +11,42 @@ mp.dps = 30  # Número de dígitos decimais
 
 points = 100
 
-Qs = np.arange(-28, 29)
-
 lamb = (514)*10**(-9)
 k = (2 * np.pi)/lamb
 L = 0.5
 Q = 0.99997*k
-qs = np.arange(-28, 29)    
+
+# -----------------------------------------------------------------------------
+# N = 29: truncamento da Frozen Wave (2N+1 = 59 feixes de Bessel)
+# -----------------------------------------------------------------------------
+# Limite FISICO, nao arbitrario. O artigo (Sec. 2) exige 0 <= beta_n <= w0/c = k
+# para que so existam ondas propagantes em +z, sem evanescentes. Com
+# beta_n = Q + 2 pi n / L:
+#
+#     n <= (k - Q) L / (2 pi) = (1.2224e7)(3e-5)(0.5)/(2 pi) = 29.18
+#
+# Portanto N = 29 e' o MAIOR truncamento admissivel. Acima disso beta_n > k,
+# k_rho_n = sqrt(k^2 - beta_n^2) fica imaginario e J_v vira Bessel modificada
+# I_v, que cresce com rho -- exatamente a onda evanescente que a condicao exclui.
+#
+# (Antes: N = 28, sem justificativa registrada. A mudanca desloca I_x/I_z em
+#  ~0.2%. `fw_field.n_max_propagante()` recalcula este limite a partir de k,Q,L.)
+# -----------------------------------------------------------------------------
+N_FW = 29
+qs = np.arange(-N_FW, N_FW + 1)
+Qs = qs          # alias historico
+
 spot = 0.0000235133
 
-M = (1.57 - 0.038j)
-M1 = (1.57 - 0.38j)
-M2 = 1.57 - 0.01*1j
-M3 = 1.57 - 1j
+M =  1.64 - 0.002205j
 
-M2_laop = (1.57 - 0.19j)
-M3_laop = (1.57 - 0.95j)
 
 mi = 1
 eta_r = 1/M
 
 # artigo de lentes - valores usados experimentalmente 
-lamb1_len = (450)*10**(-9)
-lamb2_len = (700)*10**(-9)
-lamb3_len = (950)*10**(-9)
 M1_lentes = 1.64 - 0.002205j # para lamb 1 
-M2_lentes = 1.588 - 0.003453j
-M3_lentes = 1.564 - 0.004224j
 
-f1 = 150*10**(-3)
-f2 = 50*10**(-3)
-f3 = 150*10**(-3)
-f4 = 25*10**(-3)
 
 def beta_q(q):
     return Q + 2*np.pi*q/L
